@@ -1,7 +1,7 @@
 '''
 GMAIL SMART COMPOSE APPLICATION
 START DATE : Jan 23, 2020
-END DATE : Jan 25, 2020
+END DATE : Jan 26, 2020
 RNN Model : One-to-Many words
 CHARACTER LEVEL Model
 ONE-TO-MANY Model
@@ -16,9 +16,12 @@ from keras.layers import Dense
 from keras.layers import LSTM
 from keras.layers import Embedding
 
+import sys
+
+
 # generate a sequence from the model
 def generate_seq(model, tokenizer, seed_text, n_words):
-	in_text, result = seed_text, seed_text
+	in_text, result = seed_text, ''
 	# generate a fixed number of words
 	for _ in range(n_words):
 		# encode the text as integer
@@ -36,12 +39,12 @@ def generate_seq(model, tokenizer, seed_text, n_words):
 		in_text, result = out_word, result + ' ' + out_word
 	return result
 
-data_file = "/Users/preethamkumarmadupuri/PycharmProjects/smartcompose/Data/smsspamcollection/SMSSpamCollection.txt"
+#data_file = "/Users/preethamkumarmadupuri/PycharmProjects/smartcompose/Data/smsspamcollection/SMSSpamCollection.txt"
 
-#data= "How are you?: \n How are you?: \n How do you do?"
+data= "How are you?: \n How are you?: \n How are you do?"
 
-with open(data_file, 'r') as data:
-    data = data.read().replace('\n', '')
+#with open(data_file, 'r') as data:
+#    data = data.read().replace('\n', '')
 
 
 # integer encode text
@@ -74,5 +77,5 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.fit(X, y, epochs=10, verbose=2)
 # evaluate
 print("\n Welcome to Smart Compose App: \n")
-print("Input : How ")
-print("Output : " +generate_seq(model, tokenizer, 'How', 2))
+for line in sys.stdin:
+    print(generate_seq(model, tokenizer, line.rstrip("\n"), 2))
